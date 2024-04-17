@@ -28,3 +28,7 @@ All commands are run from the root of the project, from a terminal:
 | `npm install`         | Installs dependencies                           |
 | `npm run dev`         | Starts the local dev server at `localhost:5000` |
 | `npm start`           | Starts the local client server at `localhost:3000` |
+
+## Important Note
+
+Please use the same format of data as shown in Book1.xlsx
