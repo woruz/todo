@@ -1,6 +1,7 @@
 const Task = require("../models/Task");
 const xlsx = require("xlsx");
 const cloudinary = require('../config/cloudinary');
+const { unlinkSync, readdirSync, rmSync } = require('fs')
 
 const taskController = {
   getAllTasks: async (req, res) => {
@@ -29,6 +30,7 @@ const taskController = {
       if (req.file) {
         const result = await cloudinary.uploader.upload(req.file.path);
         pdfUrl = result.secure_url;
+        unlinkSync(req.file.path);
       }
 
       const taskData = {
@@ -38,6 +40,9 @@ const taskController = {
       };
       const task = new Task(taskData);
       await task.save();
+      // const dir = 'pdfuploads';
+
+      // readdirSync(dir).forEach(f => rmSync(`${dir}/${f}`));
       res.status(201).json({ message: "Task created successfully", task });
     } catch (err) {
       res.status(400).json({ error: err.message });
@@ -68,9 +73,7 @@ const taskController = {
 
 
   uploadTasksFromExcel: async (req, res) => {
-    console.log("hello")
     try {
-      console.log({fileimp: req.file})
       if (!req.file) {
         return res.status(400).json({ error: "No file uploaded" });
       }
@@ -79,12 +82,11 @@ const taskController = {
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
       const data = xlsx.utils.sheet_to_json(worksheet);
-      console.log({data})
       const tasks = data.map((task) => ({
         title: task.title,
         description: task.description,
       }));
-
+      unlinkSync(req.file.path);
       await Task.insertMany(tasks);
 
       res.json({ message: "Tasks uploaded successfully" });

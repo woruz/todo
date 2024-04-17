@@ -53,6 +53,7 @@ export default function TodoItem() {
     formData.append("title", taskTitle.current.value);
     formData.append("description", taskSummary.current.value);
     saveTasks(formData);
+	setpdf()
   }
 
   function createTaskByExcel(event) {
@@ -60,6 +61,7 @@ export default function TodoItem() {
     const formData = new FormData();
     excel && formData.append("file", excel);
     saveExcelTasks(formData);
+	setExcel()
   }
 
   function deleteTask(id) {
@@ -222,7 +224,6 @@ export default function TodoItem() {
             </Group>
             {tasks.length > 0 ? (
               tasks.map((task, index) => {
-                console.log({ taskimp: task });
                 if (task.title && !task.isDeleted) {
                   return (
                     <Card withBorder key={index} mt={"sm"}>
@@ -252,6 +253,15 @@ export default function TodoItem() {
                         {task?.description
                           ? task.description
                           : "No summary was provided for this task"}
+                      </Text>
+					  <Text color={"dimmed"} size={"md"} mt={"sm"}>
+                        {task?.pdfUrl
+                          ? (
+							<a style={{color: "inherit",textDecoration: 'none',cursor: 'pointer'}} href={task?.pdfUrl} target="_blank">
+      							Show file
+    						</a>
+						  )
+                          : "No file was provided for this task"}
                       </Text>
                       <Text color={"dimmed"} size={"md"} mt={"sm"}>
                         {task?.completed

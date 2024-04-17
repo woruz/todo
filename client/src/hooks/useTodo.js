@@ -16,11 +16,9 @@ function useTodo(url) {
         return response.json();
       })
       .then((response) => {
-        console.log({ response });
         setTodos(response?.response);
       })
       .catch((err) => {
-        console.log({ err });
         setError(err.message);
       })
       .finally(() => {
